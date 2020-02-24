@@ -63,7 +63,7 @@ class EpisodeAnalytics:
         -------
         res: :class:`tuple`
          generated dataframes
-    """
+        """
         size = len(self.actions)
         timesteps = list(range(size))
         load_size = size * len(self.observations[0].load_p)
@@ -133,10 +133,17 @@ class EpisodeAnalytics:
 
             pos = time_step
             # TODO : change with benjamin's count of actions
-            action_line = np.sum(act._switch_line_status)
+            action_line = np.sum(act._switch_line_status) + np.sum(act._set_line_status)
+            if action_line > 0:
+                line_action = "reconnect " + line_action
+            if action_line < 0:
+                line_action = "disconnect " + line_action
+                action_line = - action_line
 
             # TODO: change with benjamin's count of actions
-            action_subs = int(np.any(act._change_bus_vect))
+            action_subs = int(np.any(act._change_bus_vect)) + int(np.any(act._set_topo_vect))
+            if action_line:
+                action_subs = 0
 
             object_changed_set = self.get_object_changed(
                 act._set_topo_vect, topo_list)
