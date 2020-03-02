@@ -272,6 +272,15 @@ class EpisodeAnalytics:
 
         return hazards, maintenances
 
+    def get_prod_types(self):
+        types = self.observation_space.gen_type
+        ret = {}
+        if types is None:
+            return ret
+        for (idx, name) in enumerate(self.prod_names):
+            ret[name] = types[idx]
+        return ret
+
 
 class Test():
     def __init__(self):

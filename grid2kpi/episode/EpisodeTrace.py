@@ -24,7 +24,8 @@ def get_total_overflow_ts(episode):
     return df
 
 
-def get_prod_share_trace(episode, prod_types):
+def get_prod_share_trace(episode):
+    prod_types = episode.get_prod_types()
     prod_type_values = list(prod_types.values()) if len(
         prod_types.values()) > 0 else []
 
@@ -106,7 +107,7 @@ def get_all_prod_trace(episode, prod_types, selection):
         if name in selection:
             trace.append(go.Scatter(
                 x=prod_with_type[prod_with_type.prod_type.values ==
-                                 name]['timestamp'].unique(),
+                                 name]['timestamp'].drop_duplicates(),
                 y=prod_with_type[prod_with_type.prod_type.values == name].groupby(['timestamp'])[
                     'value'].sum(),
                 name=name
